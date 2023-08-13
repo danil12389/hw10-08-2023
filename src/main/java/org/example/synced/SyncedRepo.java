@@ -1,4 +1,4 @@
-package org.example;
+package org.example.synced;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,10 +11,7 @@ public class SyncedRepo {
     Map<String, String> sr = Collections.synchronizedMap(repository);
 
     public  void save(String name, String url) {
-            String res = sr.putIfAbsent(name, url);
-            if(!(res == null)) {
-                throw new RuntimeException("Name {" + name + "} already used\n" + "Current Thread: " + Thread.currentThread().getName());
-            }
+           sr.putIfAbsent(name, url);
     }
 
     public String getUrlByName(String name) {

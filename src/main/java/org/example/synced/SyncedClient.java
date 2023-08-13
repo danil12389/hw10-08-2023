@@ -1,4 +1,6 @@
-package org.example;
+package org.example.synced;
+
+import org.example.synced.SyncedRepo;
 
 public class SyncedClient {
     SyncedRepo r;
