@@ -10,7 +10,7 @@ public class SyncedRepo {
 
     Map<String, String> sr = Collections.synchronizedMap(repository);
 
-    public  void save(String name, String url) {
+    public void save(String name, String url) {
            sr.putIfAbsent(name, url);
     }
 

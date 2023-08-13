@@ -1,3 +1,5 @@
+import org.example.locks.LockClient;
+import org.example.locks.LockRepo;
 import org.example.semaphore.SemaphoreClient;
 import org.example.semaphore.SemaphoreRepo;
 import org.example.unsynced.Client;
@@ -9,6 +11,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -100,8 +105,10 @@ public class MultiThreadsTest {
                     throw new RuntimeException(e);
                 }
                 try {
+                    semaphore.acquire();
                     Assertions.assertEquals("Thread_ONE can not write updates", semaphoreClient.sendToRepository("d", "u1"));
                     Assertions.assertEquals("u2", semaphoreRepo.getUrlByName("d"));
+                    semaphore.release();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -111,7 +118,9 @@ public class MultiThreadsTest {
             @Override
             public void run() {
                 try {
+                    semaphore.acquire();
                     semaphoreClient.sendToRepository("d", "u2");
+                    semaphore.release();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -119,8 +128,43 @@ public class MultiThreadsTest {
         }, "Thread_TWO");
         t1.start();
         t2.start();
+    }
 
-        t1.join();
-        t2.join();
+    @Test
+    public void locksTest() throws InterruptedException {
+        LockRepo lockRepo = new LockRepo();
+        Lock lock = new ReentrantLock();
+        LockClient lockClient = new LockClient(lockRepo, new ReentrantLock());
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                  lock.lock();
+                        Assertions.assertEquals("Thread_ONE can not write updates", lockClient.sendToRepository("d", "u1"));
+                        Assertions.assertEquals("u2", lockRepo.getUrlByName("d"));
+                }finally{
+                    lock.unlock();
+                }
+
+            }
+        }, "Thread_ONE");
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+               try {
+                   lock.lock();
+                   lockClient.sendToRepository("d", "u2");
+               }finally{
+                   lock.unlock();
+               }
+            }
+        }, "Thread_TWO");
+        t1.start();
+        t2.start();
     }
 }

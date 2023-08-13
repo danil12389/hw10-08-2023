@@ -14,9 +14,7 @@ public class SemaphoreClient {
         this.s = s;
     }
     public String sendToRepository(String name, String url) throws InterruptedException {
-        s.acquire();
         String res = r.save(name, url);
-        s.release();
         return res;
     }
 }
