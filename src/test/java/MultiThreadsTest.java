@@ -2,6 +2,9 @@ import org.example.locks.LockClient;
 import org.example.locks.LockRepo;
 import org.example.semaphore.SemaphoreClient;
 import org.example.semaphore.SemaphoreRepo;
+import org.example.threadpools.CustomCallable;
+import org.example.threadpools.ThreadPoolClient;
+import org.example.threadpools.ThreadPoolRepo;
 import org.example.unsynced.Client;
 import org.example.unsynced.Repo;
 import org.example.synced.SyncedClient;
@@ -10,8 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -33,6 +35,10 @@ public class MultiThreadsTest {
     LockRepo lockRepo;
 
     LockClient lockClient;
+
+    ThreadPoolRepo threadPoolRepo;
+
+    ThreadPoolClient threadPoolClient;
 
     @Test
     public void unsyncedTest() throws InterruptedException {
@@ -182,5 +188,21 @@ public class MultiThreadsTest {
         t2.join();
 
         Assertions.assertEquals(1, lockRepo.getCounter());
+    }
+
+    @Test
+    public void callableAndThreadPoolTest() throws Exception {
+        threadPoolRepo = new ThreadPoolRepo();
+        threadPoolClient = new ThreadPoolClient(threadPoolRepo);
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        Callable<String> callable = () -> {
+            return threadPoolClient.sendToRepository("d", "u1");
+        };
+        for(int i=0; i< 2; i++){
+            Future<String> future = executor.submit(callable);
+            System.out.println("Итерация " + i + ". Объект future: " + future.get());
+        }
+        Assertions.assertEquals(1, threadPoolRepo.getCounter());
     }
 }
