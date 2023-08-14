@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="MultiThreadsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-08-13T18:23:59" hostname="MBP-Danil" time="1.044">
+<testsuite name="MultiThreadsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-08-14T16:41:37" hostname="MBP-Danil" time="0.527">
   <properties/>
-  <testcase name="syncedTest()" classname="MultiThreadsTest" time="0.527"/>
-  <testcase name="locksTest()" classname="MultiThreadsTest" time="0.002"/>
-  <testcase name="semaphoreTest()" classname="MultiThreadsTest" time="0.003"/>
-  <testcase name="unsyncedTest()" classname="MultiThreadsTest" time="0.508"/>
+  <testcase name="locksTest()" classname="MultiThreadsTest" time="0.527"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

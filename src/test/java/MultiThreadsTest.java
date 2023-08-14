@@ -30,6 +30,10 @@ public class MultiThreadsTest {
 
     SemaphoreRepo semaphoreRepo;
 
+    LockRepo lockRepo;
+
+    LockClient lockClient;
+
     @Test
     public void unsyncedTest() throws InterruptedException {
         r = new Repo();
@@ -58,7 +62,7 @@ public class MultiThreadsTest {
         t2.join();
 
 
-        Assertions.assertEquals("u1", r.getUrlByName("d"));
+        Assertions.assertEquals(2, r.getCounter());
     }
 
     @Test
@@ -87,7 +91,7 @@ public class MultiThreadsTest {
 
         t1.join();
         t2.join();
-        Assertions.assertEquals("u2", sr.getUrlByName("d"));
+        Assertions.assertEquals(1, sr.getCounter());
     }
 
 
@@ -128,13 +132,19 @@ public class MultiThreadsTest {
         }, "Thread_TWO");
         t1.start();
         t2.start();
+
+        t1.join();
+        t2.join();
+
+        Assertions.assertEquals(1, semaphoreRepo.getCounter());
+
     }
 
     @Test
     public void locksTest() throws InterruptedException {
-        LockRepo lockRepo = new LockRepo();
+        lockRepo = new LockRepo();
         Lock lock = new ReentrantLock();
-        LockClient lockClient = new LockClient(lockRepo, new ReentrantLock());
+        lockClient = new LockClient(lockRepo, new ReentrantLock());
         Thread t1 = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -166,5 +176,11 @@ public class MultiThreadsTest {
         }, "Thread_TWO");
         t1.start();
         t2.start();
+
+
+        t1.join();
+        t2.join();
+
+        Assertions.assertEquals(1, lockRepo.getCounter());
     }
 }
