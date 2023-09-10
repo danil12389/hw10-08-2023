@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="MultiThreadsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-08-14T18:51:48" hostname="MBP-Danil" time="0.016">
-  <properties/>
-  <testcase name="callableAndThreadPoolTest()" classname="MultiThreadsTest" time="0.016"/>
-  <system-out><![CDATA[Итерацая 0. Объект future: pool-1-thread-1 wrote update
-Итерацая 1. Объект future: pool-1-thread-2 can not write updates
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
