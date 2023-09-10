@@ -7,22 +7,22 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SyncedRepository {
 
-    Map<String, String> repository = new HashMap<>();
 
     Logger logger = LoggerFactory.getLogger(SyncedRepository.class);
 
-    Map<String, String> sr = Collections.synchronizedMap(repository);
+    Map<String, String> repository = new ConcurrentHashMap<>();
 
     public void save(String name, String url) {
-        String res = sr.putIfAbsent(name, url);
+        String res = repository.putIfAbsent(name, url);
         if (res == null) {
             logger.info("Map has been updated, key:value pair added {" + name + ":" + url +"}");
         }else {
             logger.info("Map has NOT been updated, key:value pair NOT added {" + name + ":" + url+"}");
-            throw new RuntimeException("This name has been already used");
+            throw new RuntimeException("This name {" + res + "} has been already used");
         }
     }
 
