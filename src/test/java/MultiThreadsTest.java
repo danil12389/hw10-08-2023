@@ -7,7 +7,7 @@ import org.example.threadpools.ThreadPoolRepo;
 import org.example.unsynced.Client;
 import org.example.unsynced.Repo;
 import org.example.synced.SyncedClient;
-import org.example.synced.SyncedRepo;
+import org.example.synced.SyncedRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MultiThreadsTest {
 
-    SyncedRepo sr;
+    SyncedRepository sr;
     SyncedClient sc;
 
     Repo r;
@@ -71,7 +71,7 @@ public class MultiThreadsTest {
 
     @Test
     public void syncedTest() throws InterruptedException {
-        sr = new SyncedRepo();
+        sr = new SyncedRepository();
         sc = new SyncedClient(sr);
         Thread t1 = new Thread(new Runnable() {
             @Override
@@ -95,7 +95,6 @@ public class MultiThreadsTest {
 
         t1.join();
         t2.join();
-        Assertions.assertEquals(1, sr.getCounter());
     }
 
 

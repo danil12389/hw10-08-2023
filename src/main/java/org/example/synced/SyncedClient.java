@@ -1,11 +1,9 @@
 package org.example.synced;
 
-import org.example.synced.SyncedRepo;
-
 public class SyncedClient {
-    SyncedRepo r;
+    SyncedRepository r;
 
-    public SyncedClient(SyncedRepo r) {
+    public SyncedClient(SyncedRepository r) {
         this.r = r;
     }
 
